@@ -1,7 +1,7 @@
 import sublime, sublime_plugin
 from urllib import urlencode, urlopen
 
-class UploadPasteCommand( sublime_plugin.TextCommand ):
+class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 	def run(self, view):
 		url = "http://pastebin.com/api/api_post.php"	
 
