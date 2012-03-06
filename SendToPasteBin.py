@@ -69,15 +69,20 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 
 			syntax = syntaxes.get(self.view.settings().get('syntax').split('/')[-1], 'text')
 
-			args = {
-				'api_dev_key': '9defe36b1e886d4c35f7e6383095ac1e',
-				'api_paste_code': self.view.substr(region),
-				'api_paste_private': '0',
-				'api_option': 'paste',
-				'api_paste_format': syntax
-			}
+			text = self.view.substr(region)
 
-			response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
+			if not text:
+				sublime.status_message('Error sending to PasteBin: Nothing selected')
+			else:
+				args = {
+					'api_dev_key': '9defe36b1e886d4c35f7e6383095ac1e',
+					'api_paste_code': text,
+					'api_paste_private': '0',
+					'api_option': 'paste',
+					'api_paste_format': syntax
+				}
 
-			sublime.set_clipboard(response)
-			sublime.status_message(response)
+				response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
+
+				sublime.set_clipboard(response)
+				sublime.status_message(response)
