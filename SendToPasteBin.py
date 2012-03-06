@@ -1,9 +1,10 @@
 import sublime, sublime_plugin
 from urllib import urlencode, urlopen
 
+PASTEBIN_URL = "http://pastebin.com/api/api_post.php"	
+
 class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 	def run(self, view):
-		url = "http://pastebin.com/api/api_post.php"	
 
 		syntaxes = {
 			'ActionScript.tmLanguage': 'actionscript',
@@ -76,7 +77,7 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 				'api_paste_format': syntax
 			}
 
-			response = urlopen(url=url, data=urlencode(args)).read()
+			response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
 
 			sublime.set_clipboard(response)
 			sublime.status_message(response)

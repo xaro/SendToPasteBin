@@ -1,0 +1,3 @@
+[
+ 	{ "keys": ["ctrl+shift+."], "command": "send_to_paste_bin" }
+]
