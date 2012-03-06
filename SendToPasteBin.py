@@ -85,4 +85,4 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 				response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
 
 				sublime.set_clipboard(response)
-				sublime.status_message(response)
+				sublime.status_message('PasteBin URL copied to clipboard: ' + response)
