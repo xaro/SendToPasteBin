@@ -69,7 +69,7 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 
 			syntax = syntaxes.get(self.view.settings().get('syntax').split('/')[-1], 'text')
 
-			text = self.view.substr(region)
+			text = self.view.substr(region).encode('utf8')
 
 			if not text:
 				sublime.status_message('Error sending to PasteBin: Nothing selected')
