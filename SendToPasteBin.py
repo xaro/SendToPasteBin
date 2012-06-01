@@ -65,6 +65,13 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 			'YAML.tmLanguage': 'yaml'
 		}
 
+		paste_name = self.view.file_name()
+
+		if paste_name is not  None:
+			paste_name = 	os.path.basename(paste_name)
+		else:
+			paste_name = "Untitled"
+
 		for region in self.view.sel():
 
 			syntax = syntaxes.get(self.view.settings().get('syntax').split('/')[-1], 'text')
@@ -79,7 +86,8 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 					'api_paste_code': text,
 					'api_paste_private': '0',
 					'api_option': 'paste',
-					'api_paste_format': syntax
+					'api_paste_format': syntax,
+					'api_paste_name': paste_name
 				}
 
 				response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
