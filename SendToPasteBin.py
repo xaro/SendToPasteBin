@@ -3,9 +3,19 @@ from urllib import urlencode, urlopen
 
 PASTEBIN_URL = "http://pastebin.com/api/api_post.php"	
 
-class SendToPasteBinCommand( sublime_plugin.TextCommand ):
-	def run(self, view):
+class SendToPasteBinPromptCommand( sublime_plugin.WindowCommand):
+	
+	def run(self):
+		self.window.show_input_panel("Paste Name:", "", self.on_done, None, None)
 
+	def on_done(self, paste_name):
+		if self.window.active_view():
+			self.window.active_view().run_command("send_to_paste_bin", {"paste_name": paste_name} )
+
+
+class SendToPasteBinCommand( sublime_plugin.TextCommand ):
+
+	def run(self, view, paste_name = None):
 		syntaxes = {
 			'ActionScript.tmLanguage': 'actionscript',
 			'AppleScript.tmLanguage': 'applescript',
@@ -65,6 +75,14 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 			'YAML.tmLanguage': 'yaml'
 		}
 
+		if paste_name is None:
+			paste_name = self.view.file_name()				# Get full file name (Path + Base Name)
+
+			if paste_name is not  None: 					# Check if file exists on disk
+				paste_name = 	os.path.basename(paste_name)	# Extract base name
+			else:
+				paste_name = "Untitled"
+
 		for region in self.view.sel():
 
 			syntax = syntaxes.get(self.view.settings().get('syntax').split('/')[-1], 'text')
@@ -79,7 +97,8 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 					'api_paste_code': text,
 					'api_paste_private': '0',
 					'api_option': 'paste',
-					'api_paste_format': syntax
+					'api_paste_format': syntax,
+					'api_paste_name': paste_name
 				}
 
 				response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
