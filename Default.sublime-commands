@@ -1,11 +1,11 @@
 [
     {
-        "caption": "SublimeSendToPasteBin: Paste and get code",
+        "caption": "SublimeSendToPasteBin: Paste Selected Text",
         "command": "send_to_paste_bin",
         "args": {}
     },
     {
-        "caption": "SublimeSendToPasteBin: Paste with name and get code",
+        "caption": "SublimeSendToPasteBin: Paste Selected Text With Custom Name",
         "command": "send_to_paste_bin_prompt",
         "args": {}
     }
