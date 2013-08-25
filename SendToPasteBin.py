@@ -108,7 +108,7 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 					'api_paste_expire_date': '1D'
 				}
 
-				response = urlopen(url=PASTEBIN_URL, data=urlencode(args)).read()
+				response = urlopen(url=PASTEBIN_URL, data=urlencode(args).encode('utf8')).read().decode('utf8')
 
 				sublime.set_clipboard(response)
 				sublime.status_message('PasteBin URL copied to clipboard: ' + response)
