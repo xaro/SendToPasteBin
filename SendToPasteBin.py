@@ -1,7 +1,11 @@
 import os
 
 import sublime, sublime_plugin
-from urllib import urlencode, urlopen
+try:
+	from urllib.parse import urlencode
+	from urllib.request import urlopen
+except ImportError:
+	from urllib import urlencode, urlopen
 
 PASTEBIN_URL = "http://pastebin.com/api/api_post.php"	
 
