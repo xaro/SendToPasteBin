@@ -1,13 +1,28 @@
 import os
+import sublime
+import sublime_plugin
+import sys
 
-import sublime, sublime_plugin
 try:
 	from urllib.parse import urlencode
 	from urllib.request import urlopen
 except ImportError:
 	from urllib import urlencode, urlopen
 
-PASTEBIN_URL = "http://pastebin.com/api/api_post.php"	
+is_python3 = sys.version_info[0] > 2
+settings = None
+
+def init():
+	# load settings
+	prefs = sublime.load_settings("SendToPasteBin.sublime-settings")
+
+	globals()['settings'] = {
+		"pastebin_url":		"http://pastebin.com/api/api_post.php",
+		"api_dev_key":     	prefs.get("api_dev_key"),
+		"api_user_key":    	prefs.get("api_user_key"),
+		"paste_privacy":   	prefs.get("paste_privacy"),
+		"paste_expiration":	prefs.get("paste_expiration")
+	}
 
 class SendToPasteBinPromptCommand( sublime_plugin.WindowCommand):
 	
@@ -17,7 +32,6 @@ class SendToPasteBinPromptCommand( sublime_plugin.WindowCommand):
 	def on_done(self, paste_name):
 		if self.window.active_view():
 			self.window.active_view().run_command("send_to_paste_bin", {"paste_name": paste_name} )
-
 
 class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 
@@ -93,22 +107,26 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 
 			syntax = syntaxes.get(self.view.settings().get('syntax').split('/')[-1], 'text')
 
-			text = self.view.substr(region).encode('utf8')
+			text = self.view.substr(region)
 
 			if not text:
 				sublime.status_message('Error sending to PasteBin: Nothing selected')
 			else:
 				args = {
-					'api_dev_key': '9defe36b1e886d4c35f7e6383095ac1e',
+					'api_dev_key': settings.get("api_dev_key"),
+					'api_user_key': settings.get("api_user_key"),
 					'api_paste_code': text,
-					'api_paste_private': '1',
+					'api_paste_private': settings.get("paste_privacy"),
 					'api_option': 'paste',
 					'api_paste_format': syntax,
 					'api_paste_name': paste_name,
-					'api_paste_expire_date': '1D'
+					'api_paste_expire_date': '1D',
+					'api_paste_expiration': settings.get("paste_expiration")
 				}
 
-				response = urlopen(url=PASTEBIN_URL, data=urlencode(args).encode('utf8')).read().decode('utf8')
+				response = urlopen(url=settings.get("pastebin_url"), data=urlencode(args).encode('utf8')).read().decode('utf8')
 
 				sublime.set_clipboard(response)
 				sublime.status_message('PasteBin URL copied to clipboard: ' + response)
+
+init()
