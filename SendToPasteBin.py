@@ -9,25 +9,9 @@ try:
 except ImportError:
 	from urllib import urlencode, urlopen
 
-is_python3 = sys.version_info[0] > 2
-prefs = None
+API_URL = "http://pastebin.com/api/api_post.php"
 
-def plugin_loaded():
-	# load settings
-	settings = sublime.load_settings("SendToPasteBin.sublime-settings")
-
-	globals()['prefs'] = {
-		"pastebin_url":		"http://pastebin.com/api/api_post.php",
-		"api_dev_key":     	settings.get("api_dev_key"),
-		"api_user_key":    	settings.get("api_user_key"),
-		"paste_privacy":   	settings.get("paste_privacy"),
-		"paste_expiration":	settings.get("paste_expiration")
-	}
-
-	settings.clear_on_change('reload')
-	settings.add_on_change('reload', lambda:init())
-
-class SendToPasteBinPromptCommand( sublime_plugin.WindowCommand):
+class SendToPasteBinPromptCommand(sublime_plugin.WindowCommand):
 	
 	def run(self):
 		self.window.show_input_panel("Paste Name:", "", self.on_done, None, None)
@@ -36,9 +20,12 @@ class SendToPasteBinPromptCommand( sublime_plugin.WindowCommand):
 		if self.window.active_view():
 			self.window.active_view().run_command("send_to_paste_bin", {"paste_name": paste_name} )
 
-class SendToPasteBinCommand( sublime_plugin.TextCommand ):
+class SendToPasteBinCommand(sublime_plugin.TextCommand):
 
 	def run(self, view, paste_name = None):
+		# load settings
+		self.settings = sublime.load_settings("SendToPasteBin.sublime-settings")
+
 		syntaxes = {
 			'ActionScript.tmLanguage': 'actionscript',
 			'AppleScript.tmLanguage': 'applescript',
@@ -116,21 +103,18 @@ class SendToPasteBinCommand( sublime_plugin.TextCommand ):
 				sublime.status_message('Error sending to PasteBin: Nothing selected')
 			else:
 				args = {
-					'api_dev_key': prefs.get("api_dev_key"),
-					'api_user_key': prefs.get("api_user_key"),
+					'api_dev_key': self.settings.get("api_dev_key"),
+					'api_user_key': self.settings.get("api_user_key"),
+					'api_paste_expiration': self.settings.get("paste_expiration"),
+					'api_paste_private': self.settings.get("paste_privacy"),
 					'api_paste_code': text,
-					'api_paste_private': prefs.get("paste_privacy"),
 					'api_option': 'paste',
 					'api_paste_format': syntax,
 					'api_paste_name': paste_name,
-					'api_paste_expire_date': '1D',
-					'api_paste_expiration': prefs.get("paste_expiration")
+					'api_paste_expire_date': '1D'
 				}
 
-				response = urlopen(url=prefs.get("pastebin_url"), data=urlencode(args).encode('utf8')).read().decode('utf8')
+				response = urlopen(url=API_URL, data=urlencode(args).encode('utf8')).read().decode('utf8')
 
 				sublime.set_clipboard(response)
 				sublime.status_message('PasteBin URL copied to clipboard: ' + response)
-
-if not is_python3:
-	plugin_loaded()
