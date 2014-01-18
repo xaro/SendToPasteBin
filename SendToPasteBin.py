@@ -2,6 +2,7 @@ import os
 import sublime
 import sublime_plugin
 import sys
+import threading
 
 try:
 	from urllib.parse import urlencode
@@ -114,7 +115,21 @@ class SendToPasteBinCommand(sublime_plugin.TextCommand):
 					'api_paste_expire_date': '1D'
 				}
 
-				response = urlopen(url=API_URL, data=urlencode(args).encode('utf8')).read().decode('utf8')
+				thread = PasteBinApiCall(args)
+				thread.start()
 
-				sublime.set_clipboard(response)
-				sublime.status_message('PasteBin URL copied to clipboard: ' + response)
+class PasteBinApiCall(threading.Thread):
+	"""Manages the call to PasteBin's API.
+	Used to be able to do the call in another thread."""
+
+	def __init__(self, call_args):
+		self.call_args = call_args
+		threading.Thread.__init__(self)
+
+	def run(self):
+		sublime.status_message('Sending to PasteBin...')
+
+		response = urlopen(url=API_URL, data=urlencode(self.call_args).encode('utf8')).read().decode('utf8')
+
+		sublime.set_clipboard(response)
+		sublime.status_message('PasteBin URL copied to clipboard: ' + response)
