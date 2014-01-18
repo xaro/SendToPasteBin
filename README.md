@@ -1,14 +1,18 @@
 Sublime Text 3 (and 2) SendToPasteBin Plugin
 =============
-
-Sublime Text 3 (and 2) plugin to upload code to pastebin.com directly from the editor with the correct syntax highlighting.
+Sublime Text 3 (and 2) plugin uploads code to Pastebin.com directly from the editor, with the correct syntax highlighting.
 
 Usage
--------
-Select text, hit the key binding (default `ctrl+alt+c`) and your PasteBin url will be copied to your clipboard, with the proper syntax highlight selected.
+-----
+Use shortcuts or commands in the command prompt (prefix `SendToPasteBin`).
+
+Shortcuts
+---------
+ * `ctrl+alt+c`: copy the current selection in Pastebin.com. The resulting Url will be copied to your clipboard
+ * `ctrl+alt+shift+c`: same as `ctrl+alt+c`, but with a custom name of resulting pasted file
 
 Configuration
--------
+-------------
 
     "api_dev_key":  "your_key",
     "api_user_key": "your_key",
@@ -23,5 +27,6 @@ To get the dev_key, go to http://pastebin.com/api .
 
 To generate the user_key, go to http://pastebin.com/api/api_user_key.html and fill you dev_key and account info.
 
-
+Installation
+------------
 Install through package control or clone this repo in your `Sublime Packages/` folder with the name `SendToPasteBin`
