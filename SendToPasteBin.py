@@ -4,6 +4,7 @@ import sublime_plugin
 import sys
 import threading
 
+# Ensure it works for python 2 and 3
 try:
   from urllib.parse import urlencode
   from urllib.request import urlopen
@@ -13,7 +14,8 @@ except ImportError:
 API_URL = "http://pastebin.com/api/api_post.php"
 
 class SendToPasteBinPromptCommand(sublime_plugin.WindowCommand):
-  
+  """Show a window to allow the user to setup the Paste options"""
+
   def run(self):
     self.window.show_input_panel("Paste Name:", "", self.on_done, None, None)
 
@@ -24,9 +26,9 @@ class SendToPasteBinPromptCommand(sublime_plugin.WindowCommand):
 class SendToPasteBinCommand(sublime_plugin.TextCommand):
 
   def run(self, view, paste_name = None):
-    # load settings
     self.settings = sublime.load_settings("SendToPasteBin.sublime-settings")
 
+    # These are all the syntaxes supported by PasteBin currently (http://pastebin.com/api)
     syntaxes = {
       'ActionScript.tmLanguage': 'actionscript',
       'AppleScript.tmLanguage': 'applescript',
@@ -86,16 +88,19 @@ class SendToPasteBinCommand(sublime_plugin.TextCommand):
       'YAML.tmLanguage': 'yaml'
     }
 
+    # Use the filename as a default paste name
     if paste_name is None:
-      paste_name = self.view.file_name()        # Get full file name (Path + Base Name)
+      paste_name = self.view.file_name()
 
-      if paste_name is not  None:           # Check if file exists on disk
-        paste_name =  os.path.basename(paste_name)  # Extract base name
+      # Check if file exists on disk
+      if paste_name is not None:
+        # Only use the basename (we don't care about the path)
+        paste_name =  os.path.basename(paste_name)
       else:
         paste_name = "Untitled"
 
+    # Manage the user selected text
     for region in self.view.sel():
-
       syntax = syntaxes.get(self.view.settings().get('syntax').split('/')[-1], 'text')
 
       text = self.view.substr(region)
@@ -115,6 +120,7 @@ class SendToPasteBinCommand(sublime_plugin.TextCommand):
           'api_paste_expire_date': '1D'
         }
 
+        # Use a background thread to avoid freezing the main thread
         thread = PasteBinApiCall(args)
         thread.start()
 
