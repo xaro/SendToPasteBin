@@ -111,7 +111,7 @@ class SendToPasteBinCommand(sublime_plugin.TextCommand):
         args = {
           'api_dev_key': self.settings.get("api_dev_key"),
           'api_user_key': self.settings.get("api_user_key"),
-          'api_paste_expiration': self.settings.get("paste_expiration"),
+          'api_paste_expire_date': self.settings.get("paste_expiration"),
           'api_paste_private': self.settings.get("paste_privacy"),
           'api_paste_code': text,
           'api_option': 'paste',
