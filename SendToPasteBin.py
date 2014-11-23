@@ -116,8 +116,7 @@ class SendToPasteBinCommand(sublime_plugin.TextCommand):
           'api_paste_code': text,
           'api_option': 'paste',
           'api_paste_format': syntax,
-          'api_paste_name': paste_name,
-          'api_paste_expire_date': '1D'
+          'api_paste_name': paste_name
         }
 
         # Use a background thread to avoid freezing the main thread
