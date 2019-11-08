@@ -152,10 +152,10 @@ class PasteBinApiCall(threading.Thread):
         ).read().decode('utf8')
 
         url_regex = '(.*//pastebin\.com/)(.*$)'
-        paste_key = re.match(url_regex, response, flags=re.IGNORECASE)
+        paste_key = re.match(url_regex, response, flags=re.IGNORECASE).group(2)
 
         if self.settings.get("paste_url_type") == "raw":
-            response = ROOT_URL + "/raw/" + paste_key.group(2)
+            response = ROOT_URL + "/raw/" + paste_key
 
         sublime.set_clipboard(response)
         sublime.status_message('PasteBin URL copied to clipboard: ' + response)
