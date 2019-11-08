@@ -140,6 +140,8 @@ class PasteBinApiCall(threading.Thread):
     def __init__(self, call_args):
         self.call_args = call_args
         threading.Thread.__init__(self)
+        self.settings = sublime.load_settings(
+            "SendToPasteBin.sublime-settings")
 
     def run(self):
         sublime.status_message('Sending to PasteBin ...')
