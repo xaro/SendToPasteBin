@@ -1,11 +1,18 @@
 [
     {
-        "caption": "SublimeSendToPasteBin: Paste Selected Text",
+        "caption": "SendToPasteBin: Settings",
+        "command": "edit_settings",
+        "args": {
+            "base_file": "${packages}/SendToPasteBin/SendToPasteBin.sublime-settings"
+        }
+    },
+    {
+        "caption": "SendToPasteBin: Paste Selected Text",
         "command": "send_to_paste_bin",
         "args": {}
     },
     {
-        "caption": "SublimeSendToPasteBin: Paste Selected Text With Custom Name",
+        "caption": "SendToPasteBin: Paste Selected Text With Custom Name",
         "command": "send_to_paste_bin_prompt",
         "args": {}
     }
