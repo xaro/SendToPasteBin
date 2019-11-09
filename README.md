@@ -15,7 +15,7 @@ Use shortcuts or commands in the command prompt (prefix `SendToPasteBin`).
 
 `SendToPasteBin.sublime-settings`:
 
-```json
+```
 {
     // See https://pastebin.com/api for api key information.
     "api_dev_key": "your key",
