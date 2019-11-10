@@ -35,9 +35,9 @@ Use shortcuts or commands in the command prompt (prefix `SendToPasteBin`).
 }
 ```
 
-To get the dev_key, go to https://pastebin.com/api .
+To get the dev_key, go to: https://pastebin.com/api
 
-To generate the user_key, go to https://pastebin.com/api/api_user_key.html and fill you dev_key and account info.
+To generate the user_key, go to: https://pastebin.com/api/api_user_key.html and fill in your dev_key and account info.
 
 ## Installation
 
